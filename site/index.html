@@ -42,23 +42,68 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.1.3/theme-monokai.js" type="text/javascript" charset="utf-8"></script>
 	<div id="editor">
-function main( progress ){
-	var shape = Shape();
-	shape.moveTo( -1, -1 );
-	shape.lineTo(  0, -1.8 );
-	shape.lineTo(  1,  -1 );
-	shape.lineTo(  1,  1 );
-	shape.lineTo(  0,  1.8 );
-	shape.lineTo( -1,  1 );
-	var extrudeSettings = {
-		amount: 0,
-		bevelEnabled: true,
-		bevelSegments: 1,
-		bevelSize: 0.5,
-		bevelThickness: 0.5
-	};
-	return Extrude( shape, extrudeSettings ).toGeometry();
+function clean(input){
+	return input.replace( /\s+/g, ' ' ).toLowerCase();
 }
+
+var patternGet = new MultiInputSingleOutput([
+	'what is the value of (.*)',
+	'what is (.*)'
+], function( matches, state ){
+	if( patternSum.test( matches[1] ) ){
+		return patternSum.parse( matches[1], state );
+	}
+	return state[ matches[1] ];
+});
+
+var patternSet = new MultiInputSingleOutput([
+	'remember (.*)',
+	'set (.*)',
+	'save (.*)'
+], function( matches, state ){
+	return patternEquals.parse( matches[1].trim(), state );
+});
+var patternEquals = new MultiInputSingleOutput([
+	'(.*) is (.*)',
+	'(.*) to (.*)',
+	'(.*) as (.*)'
+], function( matches, state ){
+	state[matches[1]] = main.parse( matches[2], state );
+	return state;
+});
+
+var patternAny = new MultiInputSingleOutput([
+	'(.*)'
+], function( matches, state ){
+	return matches[1];
+});
+
+var patternSum = new MultiInputSingleOutput([
+	'sum of (.*)',
+	'sum (.*)',
+	'total of (.*)',
+	'total (.*)',
+	'add (.*)',
+	'add all of (.*)'
+], function( matches, state ){
+	var numbers = matches[1].replace('and',',').split(',');
+	var total = 0;
+	for( var i=0, l=numbers.length; i&lt;l; i+=1 ){
+		var n = parseFloat(numbers[i]);
+		if( Number.isNaN(n) ){
+			n = parseFloat( state[numbers[i].trim()] );
+		}
+		total += n;
+	}
+	return total;
+});
+
+var main = new MultiInputMultiOutput([
+	patternSet,
+	patternGet,
+	patternSum,
+	patternAny
+]);
 	</div>
 	<div id="chat-window">
 		<div id="chat-messages" class="chat-conversation">
