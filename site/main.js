@@ -169,14 +169,37 @@ $('#btn-chat-say-it').on('click',function(ev){
 	processInputText( input.value );
 	input.value = '';
 });
+// http://stackoverflow.com/questions/4810841/how-can-i-pretty-print-json-using-javascript#7220510
+function syntaxHighlightJson(json) {
+    if (typeof json != 'string') {
+         json = JSON.stringify(json, undefined, 2);
+    }
+    json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return '<pre class="json-object">'+json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        var cls = 'number';
+        if (/^"/.test(match)) {
+            if (/:$/.test(match)) {
+                cls = 'key';
+            } else {
+                cls = 'string';
+            }
+        } else if (/true|false/.test(match)) {
+            cls = 'boolean';
+        } else if (/null/.test(match)) {
+            cls = 'null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
+    })+'</pre>';
+}
+
 function processInputText( text ){
 	say( text, 'primary', 'You', 'user', '#chat-messages' );
 	var $chat = $('#chat-messages');
 	$chat.animate({scrollTop: $chat.prop("scrollHeight")}, 300);
 	chat.addInput( text );
 	var response = parser.parse( text, parserGlobalState );
-	console.info( response );
-	typeMessage( response, 100, 'other', 'Robot', 'desktop', '#chat-messages' );
+	var msg = syntaxHighlightJson( response );
+	typeMessage( msg, 100, 'other', 'Robot', 'desktop', '#chat-messages' );
 }
 function chatAreaResize(){
 	var container = document.getElementById('chat-window');
