@@ -71,5 +71,5 @@ console.info( main.parse( 'set y to 5', globalState ) );
 console.info( 'x = '+ main.parse( 'what is x', globalState ) );
 console.info( 'y = '+ main.parse( 'what is the value of y', globalState ) );
 console.info( 'y+x = '+ main.parse( 'what is the sum of y and x', globalState ) );
-console.info( main.parse( 'set z to the sum of x and y', globalState ) );
+console.info( main.parse( 'set z to the sum of 10, 12, x and y', globalState ) );
 console.info( 'z = '+ main.parse( 'what is z', globalState ) );
