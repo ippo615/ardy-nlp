@@ -14,7 +14,7 @@ var patternSum = new MultiInputSingleOutput([
 	'total (.*)',
 	'add (.*)',
 	'add all of (.*)'
-], function( matches ){
+], function( matches, state ){
 	var numbers = matches[1].replace('and',',').split(',');
 	var total = 0;
 	for( var i=0, l=numbers.length; i<l; i+=1 ){
@@ -35,7 +35,7 @@ var patternMax = new MultiInputSingleOutput([
 	'greatest value in (.*)',
 	'max in (.*)',
 	'maximum in (.*)'
-], function( matches ){
+], function( matches, state ){
 	var numbers = matches[1].replace('and',',').split(',');
 	var max = -9e99;
 	for( var i=0, l=numbers.length; i<l; i+=1 ){
@@ -55,7 +55,7 @@ var patternMin = new MultiInputSingleOutput([
 	'least value in (.*)',
 	'min in (.*)',
 	'minimum in (.*)'
-], function( matches ){
+], function( matches, state ){
 	var numbers = matches[1].replace('and',',').split(',');
 	var min = 9e99;
 	for( var i=0, l=numbers.length; i<l; i+=1 ){
@@ -73,7 +73,7 @@ var patternDoMath = new MultiInputMultiOutput([
 var patternWhatIs = new MultiInputSingleOutput([
 	'what is (.*)',
 	'what do you get when (.*)'
-], function(matches){
+], function( matches, state ){
 	return patternDoMath.parse( matches[1] );
 });
 
@@ -82,7 +82,7 @@ var patternGreeting = new MultiInputSingleOutput([
 	'hello (.*)',
 	'hi (.*)',
 	'howdy (.*)'
-],function(matches){
+],function( matches, state ){
 	return 'Hello!';
 });
 
@@ -132,7 +132,6 @@ console.info( main.parse( 'what is the smallest value in 1,2,3,4, 5, 6, 7' ) );
 console.info( patternDoMath.parse( 'what is the biggest value in 1,2,3,4, 5, 6, 7' ) );
 
 /* Features to be worked out:
- * - add a parse method to Patterns - to execute the appropriate action
  * - simplify the parsing/execution (there is some repitition/room for errors)
  * - symbolic reduction? or is that entirely on the actions and not the parser
  * - give each Pattern an optional preprocessor
