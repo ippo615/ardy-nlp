@@ -1,0 +1,49 @@
+
+.chat-input-wrapper {
+	padding: 1em;
+	border-top: none;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.chat-input-submit {
+	width: 25%;
+	float: right;
+}
+.chat-input {
+	border: none;
+	width: 70%;
+}
+
+.chat-conversation {
+	position: absolute;
+	top: 0;	
+	bottom: 3em;
+	overflow-y: scroll;
+	display: block;
+	left:0;
+	right:0;
+}
+
+.chat-message-group {
+	padding: 0.5em;
+}
+
+.chat-sender-info {
+	font-size: 0.8em;
+	font-weight: 200;
+	opacity: 0.5;
+	padding: 0.2em 0;
+}
+
+.chat-user-primary {
+	text-align: right;
+}
+.chat-user-other {
+	text-align: left;
+}
+
+.chat-user-name, .chat-message-time {
+	display: inline;
+}
